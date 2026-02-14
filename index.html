@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ficha de Investigador - Call of Cthulhu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="sheet-wrap">
+    <header>
+      <h1>Ficha de Investigador</h1>
+      <p>Modelo inspirado em Call of Cthulhu (7ª edição)</p>
+    </header>
+
+    <form id="sheetForm" class="sheet-grid" autocomplete="off">
+      <section class="panel basic-info">
+        <h2>Dados Básicos</h2>
+        <div class="fields two-col">
+          <label>Nome
+            <input type="text" name="nome" />
+          </label>
+          <label>Jogador
+            <input type="text" name="jogador" />
+          </label>
+          <label>Ocupação
+            <input type="text" name="ocupacao" />
+          </label>
+          <label>Idade
+            <input type="number" name="idade" min="10" max="99" />
+          </label>
+          <label>Residência
+            <input type="text" name="residencia" />
+          </label>
+          <label>Local de Nascimento
+            <input type="text" name="nascimento" />
+          </label>
+        </div>
+      </section>
+
+      <section class="panel attrs">
+        <h2>Atributos</h2>
+        <div class="attribute-header">
+          <span>Atributo</span>
+          <span>Valor</span>
+          <span>1/2</span>
+          <span>1/5</span>
+        </div>
+        <div id="attributesList" class="attribute-list"></div>
+      </section>
+
+      <section class="panel derived">
+        <h2>Atributos Derivados</h2>
+        <div class="fields two-col">
+          <label>Pontos de Vida (PV)
+            <input type="number" name="pv" readonly />
+          </label>
+          <label>Magia (PM)
+            <input type="number" name="pm" readonly />
+          </label>
+          <label>Sanidade (SAN)
+            <input type="number" name="san" />
+          </label>
+          <label>Sorte
+            <input type="number" name="sorte" min="0" max="99" />
+          </label>
+          <label>Movimento
+            <input type="number" name="mov" min="1" max="20" />
+          </label>
+          <label>Dano Bônus / Build
+            <input type="text" name="dbuild" placeholder="ex: +1D4 / 1" />
+          </label>
+        </div>
+      </section>
+
+      <section class="panel skills">
+        <h2>Perícias</h2>
+        <div class="skill-header">
+          <span>Perícia</span>
+          <span>%</span>
+          <span>1/2</span>
+          <span>1/5</span>
+        </div>
+        <div id="skillsList" class="skill-list"></div>
+      </section>
+
+      <section class="panel weapons">
+        <h2>Armas</h2>
+        <div class="weapons-header">
+          <span>Armas</span>
+          <span>Regular</span>
+          <span>Difícil</span>
+          <span>Extremo</span>
+          <span>Dano</span>
+          <span>Alcance</span>
+          <span>Ataques</span>
+          <span>Defeito</span>
+        </div>
+        <div class="weapons-list">
+          <div class="weapon-row">
+            <input type="text" name="arma_1_nome" value="Desarmado" />
+            <input type="number" name="arma_1_regular" value="60" min="0" max="99" />
+            <input type="number" name="arma_1_dificil" value="30" min="0" max="99" />
+            <input type="number" name="arma_1_extremo" value="12" min="0" max="99" />
+            <input type="text" name="arma_1_dano" value="1d3+BD" />
+            <input type="text" name="arma_1_alcance" value="-" />
+            <input type="text" name="arma_1_ataques" value="1" />
+            <input type="text" name="arma_1_defeito" value="-" />
+          </div>
+          <div class="weapon-row">
+            <input type="text" name="arma_2_nome" />
+            <input type="number" name="arma_2_regular" min="0" max="99" />
+            <input type="number" name="arma_2_dificil" min="0" max="99" />
+            <input type="number" name="arma_2_extremo" min="0" max="99" />
+            <input type="text" name="arma_2_dano" placeholder="ex: 1D8+1" />
+            <input type="text" name="arma_2_alcance" />
+            <input type="text" name="arma_2_ataques" />
+            <input type="text" name="arma_2_defeito" />
+          </div>
+          <div class="weapon-row">
+            <input type="text" name="arma_3_nome" />
+            <input type="number" name="arma_3_regular" min="0" max="99" />
+            <input type="number" name="arma_3_dificil" min="0" max="99" />
+            <input type="number" name="arma_3_extremo" min="0" max="99" />
+            <input type="text" name="arma_3_dano" />
+            <input type="text" name="arma_3_alcance" />
+            <input type="text" name="arma_3_ataques" />
+            <input type="text" name="arma_3_defeito" />
+          </div>
+          <div class="weapon-row">
+            <input type="text" name="arma_4_nome" />
+            <input type="number" name="arma_4_regular" min="0" max="99" />
+            <input type="number" name="arma_4_dificil" min="0" max="99" />
+            <input type="number" name="arma_4_extremo" min="0" max="99" />
+            <input type="text" name="arma_4_dano" />
+            <input type="text" name="arma_4_alcance" />
+            <input type="text" name="arma_4_ataques" />
+            <input type="text" name="arma_4_defeito" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel notes">
+        <h2>Histórico e Anotações</h2>
+        <label>Descrição
+          <textarea name="descricao" rows="4"></textarea>
+        </label>
+        <label>Equipamentos
+          <textarea name="equipamentos" rows="4"></textarea>
+        </label>
+        <label>Anotações da Campanha
+          <textarea name="anotacoes" rows="4"></textarea>
+        </label>
+      </section>
+    </form>
+
+    <footer class="actions">
+      <button type="button" id="saveBtn">Salvar</button>
+      <button type="button" id="clearBtn" class="alt">Limpar</button>
+      <button type="button" id="printBtn" class="alt">Exportar PDF</button>
+      <small id="status"></small>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

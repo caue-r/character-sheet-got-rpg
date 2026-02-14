@@ -1,0 +1,350 @@
+:root {
+  --bg-night: #0b0d12;
+  --bg-stone: #151922;
+  --panel-iron: #1d2330;
+  --panel-edge: #575f6f;
+  --ink-main: #ece6d8;
+  --ink-muted: #b4ab97;
+  --accent-gold: #c9a86a;
+  --accent-ember: #8f3a2d;
+  --line-soft: #3a4252;
+  --input-bg: #131924;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Crimson Text", serif;
+  color: var(--ink-main);
+  background:
+    radial-gradient(circle at 10% 8%, rgba(201, 168, 106, 0.14), transparent 34%),
+    radial-gradient(circle at 88% 78%, rgba(143, 58, 45, 0.18), transparent 36%),
+    linear-gradient(165deg, #07090e 0%, #101521 45%, #0b0d13 100%);
+  padding: 28px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.015) 50%, transparent 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      rgba(255, 255, 255, 0.012) 4px
+    );
+  pointer-events: none;
+}
+
+.sheet-wrap {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 16px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(201, 168, 106, 0.08), transparent 58%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.03), transparent 40%),
+    #111722;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+h1,
+h2 {
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 4vw, 2.9rem);
+  color: var(--accent-gold);
+  text-transform: uppercase;
+}
+
+header p {
+  margin: 6px 0 0;
+  color: var(--ink-muted);
+  font-size: 1.02rem;
+}
+
+.sheet-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.panel {
+  position: relative;
+  border: 1px solid var(--panel-edge);
+  border-radius: 14px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(201, 168, 106, 0.05), transparent 25%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent 48%),
+    var(--panel-iron);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(201, 168, 106, 0.18);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.panel h2 {
+  margin-bottom: 12px;
+  font-size: 1.14rem;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+}
+
+.fields {
+  display: grid;
+  gap: 10px;
+}
+
+.two-col {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+label {
+  display: grid;
+  gap: 4px;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+textarea {
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--input-bg);
+  color: var(--ink-main);
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 2px rgba(201, 168, 106, 0.2);
+  transform: translateY(-1px);
+}
+
+.attribute-header,
+.skill-header,
+.attribute-row,
+.skill-row {
+  display: grid;
+  grid-template-columns: 1.5fr 0.7fr 0.7fr 0.7fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.skill-header,
+.skill-row {
+  grid-template-columns: minmax(170px, 1fr) 72px 72px 72px;
+}
+
+.attribute-header,
+.skill-header,
+.weapons-header {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.attribute-list,
+.skill-list,
+.weapons-list {
+  display: grid;
+  gap: 8px;
+}
+
+.skill-list {
+  grid-template-columns: repeat(2, minmax(360px, 1fr));
+  gap: 12px;
+}
+
+.attribute-row,
+.skill-row,
+.weapon-row {
+  padding: 6px;
+  border: 1px solid rgba(87, 95, 111, 0.45);
+  border-radius: 8px;
+  background: rgba(8, 11, 17, 0.34);
+}
+
+.skill-row {
+  padding: 12px;
+}
+
+.skill-row input {
+  min-height: 42px;
+}
+
+.weapons-header,
+.weapon-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 0.8fr 0.8fr 1fr 0.9fr 0.8fr 0.8fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.attribute-row input,
+.skill-row input,
+.weapon-row input {
+  width: 100%;
+}
+
+.skill-header span:nth-child(n + 2),
+.skill-row .value-display {
+  text-align: center;
+}
+
+.value-display {
+  text-align: center;
+  border: 1px dashed rgba(201, 168, 106, 0.35);
+  border-radius: 6px;
+  padding: 8px 6px;
+  color: var(--ink-main);
+  background: rgba(20, 24, 33, 0.7);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 14px;
+}
+
+button {
+  border: 1px solid #7f6435;
+  background: linear-gradient(180deg, #cfb47a 0%, #a88348 100%);
+  color: #1b1612;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+button:hover {
+  filter: brightness(1.04);
+}
+
+button.alt {
+  background: linear-gradient(180deg, #2f3748 0%, #252c3b 100%);
+  color: var(--ink-main);
+  border-color: #4f5a6e;
+}
+
+#status {
+  min-width: 190px;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+@media (min-width: 900px) {
+  .sheet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .basic-info,
+  .skills,
+  .weapons,
+  .notes {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 820px) {
+  body {
+    padding: 16px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .weapons-header,
+  .weapon-row {
+    grid-template-columns: 1fr;
+  }
+
+  .weapons-header {
+    display: none;
+  }
+
+  .skill-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #111;
+    padding: 0;
+  }
+
+  body::before,
+  .panel::before {
+    display: none;
+  }
+
+  header,
+  .panel {
+    border-color: #777;
+    box-shadow: none;
+    background: #fff;
+  }
+
+  h1,
+  h2,
+  header p {
+    color: #111;
+  }
+
+  input,
+  textarea,
+  .value-display {
+    border-color: #aaa;
+    background: #fff;
+    color: #111;
+    box-shadow: none;
+  }
+
+  .actions {
+    display: none;
+  }
+}
