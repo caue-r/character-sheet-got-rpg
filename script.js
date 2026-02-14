@@ -188,16 +188,39 @@ function getAttr(name) {
   return Number(form.elements[`attr_${name}`]?.value || 0);
 }
 
+function calcMove(str, des, tam) {
+  if (!str || !des || !tam) {
+    return "";
+  }
+
+  const higherThanTamCount = Number(str > tam) + Number(des > tam);
+
+  if (higherThanTamCount === 2) {
+    return 9;
+  }
+
+  if (higherThanTamCount === 1) {
+    return 8;
+  }
+
+  return 7;
+}
+
 function updateDerivedStats() {
+  const str = getAttr("FOR");
   const con = getAttr("CON");
+  const des = getAttr("DES");
   const tam = getAttr("TAM");
   const pod = getAttr("POD");
 
   const hp = Math.floor((con + tam) / 10);
   const mp = Math.floor(pod / 5);
+  const mov = calcMove(str, des, tam);
 
   form.elements.pv.value = hp || "";
   form.elements.pm.value = mp || "";
+  form.elements.mov.value = mov;
+  form.elements.mov.readOnly = true;
 
   const sanEl = form.elements.san;
   if (!sanEl.value) {
