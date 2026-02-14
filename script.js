@@ -46,7 +46,7 @@ const REQUESTED_SKILLS = [
   { name: "Nível de Crédito", base: 0 },
   { name: "Ocultismo", base: 5 },
   { name: "Persuasão", base: 10 },
-  { name: "Predigitação", base: 10 },
+  { name: "Presdigitação", base: 10 },
   { name: "Primeiros Socorros", base: 30 },
   { name: "Psicologia", base: 10 },
   { name: "Saltar", base: 20 },
