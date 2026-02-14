@@ -210,6 +210,37 @@ function calcMove(str, des, tam) {
   return 7;
 }
 
+function calcDamageBonus(str, tam) {
+  if (!str || !tam) {
+    return "";
+  }
+
+  const total = str + tam;
+
+  if (total <= 64) {
+    return "-2";
+  }
+
+  if (total <= 84) {
+    return "-1";
+  }
+
+  if (total <= 124) {
+    return "0";
+  }
+
+  if (total <= 164) {
+    return "+1d4";
+  }
+
+  if (total <= 204) {
+    return "+1d6";
+  }
+
+  const extraDice = Math.floor((total - 205) / 80);
+  return `+${2 + extraDice}d6`;
+}
+
 function updateDerivedStats() {
   const str = getAttr("FOR");
   const con = getAttr("CON");
@@ -220,11 +251,14 @@ function updateDerivedStats() {
   const hp = Math.floor((con + tam) / 10);
   const mp = Math.floor(pod / 5);
   const mov = calcMove(str, des, tam);
+  const damageBonus = calcDamageBonus(str, tam);
 
   form.elements.pv.value = hp || "";
   form.elements.pm.value = mp || "";
   form.elements.mov.value = mov;
   form.elements.mov.readOnly = true;
+  form.elements.dbuild.value = damageBonus;
+  form.elements.dbuild.readOnly = true;
 
   const sanEl = form.elements.san;
   if (!sanEl.value) {
