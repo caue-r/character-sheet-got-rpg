@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ficha de Investigador - Call of Cthulhu</title>
+  <title>Crônica de Investigador</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="sheet-wrap">
-    <header>
-      <h1>Ficha de Investigador</h1>
-      <p>Modelo inspirado em Call of Cthulhu (7ª edição)</p>
+  <main class="citadel">
+    <header class="hero-banner">
+      <div class="hero-crest">⚔</div>
+      <div>
+        <h1>Crônica do Investigador</h1>
+        <p class="hero-sub">Ficha temática inspirada em Game of Thrones</p>
+      </div>
+      <div class="hero-crest">⚔</div>
     </header>
 
     <form id="sheetForm" class="sheet-grid" autocomplete="off">
       <section class="panel basic-info">
-        <h2>Dados Básicos</h2>
+        <h2>Casa e Identidade</h2>
         <div class="fields two-col">
           <label>Nome
             <input type="text" name="nome" />
@@ -53,7 +57,7 @@
       </section>
 
       <section class="panel derived">
-        <h2>Atributos Derivados</h2>
+        <h2>Recursos</h2>
         <div class="fields two-col">
           <label>Pontos de Vida (PV)
             <input type="number" name="pv" readonly />
@@ -144,7 +148,7 @@
       </section>
 
       <section class="panel notes">
-        <h2>Histórico e Anotações</h2>
+        <h2>Crônicas</h2>
         <label>Descrição
           <textarea name="descricao" rows="4"></textarea>
         </label>
@@ -158,9 +162,9 @@
     </form>
 
     <footer class="actions">
-      <button type="button" id="saveBtn">Salvar</button>
-      <button type="button" id="clearBtn" class="alt">Limpar</button>
-      <button type="button" id="printBtn" class="alt">Exportar PDF</button>
+      <button type="button" id="saveBtn">Selar Registro</button>
+      <button type="button" id="clearBtn" class="alt">Limpar Pergaminho</button>
+      <button type="button" id="printBtn" class="alt">Forjar PDF</button>
       <small id="status"></small>
     </footer>
   </main>
