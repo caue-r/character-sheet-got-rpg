@@ -307,7 +307,7 @@ button.alt {
       "basic basic basic basic basic basic basic derived derived derived derived derived"
       "skills skills skills skills skills skills skills skills skills skills skills skills"
       "notes notes notes notes notes notes notes notes notes notes notes notes"
-      "weapons weapons weapons weapons weapons weapons weapons weapons weapons weapons weapons weapons";
+      "weapons weapons weapons weapons weapons weapons weapons weapons weapons weapons bd bd";
   }
 
   .basic-info { grid-area: basic; }
@@ -316,6 +316,32 @@ button.alt {
   .skills { grid-area: skills; }
   .notes { grid-area: notes; }
   .weapons { grid-area: weapons; }
+  .bd-panel { grid-area: bd; }
+}
+
+.bd-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-self: start;
+  height: auto;
+}
+
+.bd-panel label {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.bd-input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  padding: 12px 0;
 }
 
 @media (max-width: 920px) {
