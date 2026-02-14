@@ -87,7 +87,11 @@ const form = document.getElementById("sheetForm");
 const attributesList = document.getElementById("attributesList");
 const skillsList = document.getElementById("skillsList");
 const statusEl = document.getElementById("status");
+const importBtn = document.getElementById("importBtn");
+const importFileInput = document.getElementById("importFileInput");
 const WEAPON_ROWS = 4;
+const EXPORT_APP_ID = "ficha-rpg";
+const EXPORT_VERSION = 1;
 
 function makeReadonlyValue(initial = "-") {
   const span = document.createElement("span");
@@ -294,7 +298,7 @@ function updateAutoSkills() {
   }
 }
 
-function saveSheet() {
+function collectFormData() {
   const data = {};
   const elements = Array.from(form.elements);
 
@@ -305,8 +309,106 @@ function saveSheet() {
     data[el.name] = el.value;
   });
 
+  return data;
+}
+
+function buildExportFilename(characterName) {
+  const normalizedName = (characterName || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9_-]/g, "");
+
+  const safeName = normalizedName || "personagem_sem_nome";
+  return `${safeName}.json`;
+}
+
+function downloadSheetJson(data) {
+  const payload = {
+    meta: {
+      app: EXPORT_APP_ID,
+      version: EXPORT_VERSION,
+      exportedAt: new Date().toISOString()
+    },
+    data
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json"
+  });
+  const fileName = buildExportFilename(data.nome);
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function applySheetData(data) {
+  Object.entries(data).forEach(([key, value]) => {
+    if (!form.elements[key]) {
+      return;
+    }
+    form.elements[key].value = value;
+    form.elements[key].dispatchEvent(new Event("input", { bubbles: true }));
+  });
+
+  updateDerivedStats();
+}
+
+function saveSheet() {
+  const data = collectFormData();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  statusEl.textContent = "Ficha salva localmente.";
+  downloadSheetJson(data);
+  statusEl.textContent = "Registro exportado em JSON e salvo localmente.";
+}
+
+function parseImportedData(content) {
+  let parsed;
+
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    throw new Error("Arquivo JSON inválido.");
+  }
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("Estrutura de arquivo inválida.");
+  }
+
+  const { data } = parsed;
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw new Error("Arquivo sem bloco 'data' válido.");
+  }
+
+  const applicableEntries = Object.entries(data).filter(([key]) =>
+    Boolean(form.elements[key])
+  );
+
+  if (!applicableEntries.length) {
+    throw new Error("Nenhum campo válido encontrado para importação.");
+  }
+
+  return Object.fromEntries(applicableEntries);
+}
+
+async function importSheetFromFile(file) {
+  if (!file) {
+    return;
+  }
+
+  const raw = await file.text();
+  const data = parseImportedData(raw);
+
+  applySheetData(data);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  statusEl.textContent = "Ficha importada com sucesso.";
 }
 
 function loadSheet() {
@@ -318,18 +420,11 @@ function loadSheet() {
 
   try {
     const data = JSON.parse(raw);
-    Object.entries(data).forEach(([key, value]) => {
-      if (form.elements[key]) {
-        form.elements[key].value = value;
-        form.elements[key].dispatchEvent(new Event("input", { bubbles: true }));
-      }
-    });
+    applySheetData(data);
     statusEl.textContent = "Ficha carregada.";
   } catch {
     statusEl.textContent = "Erro ao carregar dados salvos.";
   }
-
-  updateDerivedStats();
 }
 
 function clearSheet() {
@@ -374,11 +469,24 @@ document.getElementById("saveBtn").addEventListener("click", () => {
   flashStatus();
 });
 
+importBtn.addEventListener("click", () => {
+  importFileInput.click();
+});
+
+importFileInput.addEventListener("change", async () => {
+  const [file] = importFileInput.files || [];
+
+  try {
+    await importSheetFromFile(file);
+  } catch (error) {
+    statusEl.textContent = error.message || "Erro ao importar arquivo.";
+  } finally {
+    importFileInput.value = "";
+    flashStatus();
+  }
+});
+
 document.getElementById("clearBtn").addEventListener("click", () => {
   clearSheet();
   flashStatus();
-});
-
-document.getElementById("printBtn").addEventListener("click", () => {
-  window.print();
 });
