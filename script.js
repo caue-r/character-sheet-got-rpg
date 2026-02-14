@@ -5,10 +5,8 @@ const ATTRIBUTES = [
 ];
 
 const BASE_SKILLS = [
-  { name: "Arrombar", base: 1 },
   { name: "Arte/Oficio", base: 5 },
   { name: "Biblioteca", base: 20 },
-  { name: "Briga", base: 25 },
   { name: "Charme", base: 15 },
   { name: "Escutar", base: 20 },
   { name: "Esquiva", auto: "DES/2" },
@@ -17,7 +15,6 @@ const BASE_SKILLS = [
   { name: "Lábia", base: 5 },
   { name: "Medicina", base: 1 },
   { name: "Ocultismo", base: 5 },
-  { name: "Percepção", base: 25 },
   { name: "Persuasão", base: 10 },
   { name: "Primeiros Socorros", base: 30 },
   { name: "Psicologia", base: 10 },
@@ -27,13 +24,11 @@ const BASE_SKILLS = [
 const REQUESTED_SKILLS = [
   { name: "Arremessar", base: 20 },
   { name: "Arte/Oficio", base: 5 },
-  { name: "Lança", base: 20 },
   { name: "Avaliação", base: 5 },
-  { name: "Cavalgar", base: 5 },
+  { name: "Cavalgar", base: 15 },
   { name: "Charme", base: 15 },
   { name: "Engenhosidade", base: 5 },
   { name: "Disfarce", base: 5 },
-  { name: "Encontrar", base: 25 },
   { name: "Escutar", base: 20 },
   { name: "Escalar", base: 20 },
   { name: "Esquiva", auto: "DES/2" },
@@ -90,6 +85,7 @@ const statusEl = document.getElementById("status");
 const importBtn = document.getElementById("importBtn");
 const importFileInput = document.getElementById("importFileInput");
 const WEAPON_ROWS = 4;
+const CUSTOM_SKILLS_COUNT = 5;
 const EXPORT_APP_ID = "ficha-rpg";
 const EXPORT_VERSION = 1;
 
@@ -186,6 +182,37 @@ function buildSkills() {
     row.append(name, input, half, fifth);
     skillsList.appendChild(row);
   });
+
+  for (let i = 1; i <= CUSTOM_SKILLS_COUNT; i += 1) {
+    const row = document.createElement("div");
+    row.className = "skill-row custom-skill-row";
+
+    const customName = document.createElement("input");
+    customName.type = "text";
+    customName.name = `custom_skill_${i}_name`;
+    customName.placeholder = "Perícia personalizada";
+
+    const customValue = document.createElement("input");
+    customValue.type = "number";
+    customValue.name = `custom_skill_${i}_value`;
+    customValue.min = "0";
+    customValue.max = "99";
+
+    const half = makeReadonlyValue();
+    const fifth = makeReadonlyValue();
+
+    customValue.addEventListener("input", () => {
+      if (customValue.value === "") {
+        half.textContent = "-";
+        fifth.textContent = "-";
+        return;
+      }
+      applySkillDerived(customValue, half, fifth);
+    });
+
+    row.append(customName, customValue, half, fifth);
+    skillsList.appendChild(row);
+  }
 }
 
 function getAttr(name) {
@@ -469,16 +496,42 @@ function clearSheet() {
     el.textContent = "-";
   });
 
-  // Reaplica o valor base das perícias e recalcula os valores derivados.
-  document.querySelectorAll(".skill-row").forEach((row, index) => {
-    const input = row.querySelector("input");
-    const base = getSkillBaseValue(SKILLS[index]);
+  resetSkillsToDefault();
+
+  statusEl.textContent = "Ficha limpa.";
+  updateDerivedStats();
+}
+
+function resetSkillsToDefault() {
+  SKILLS.forEach((skill) => {
+    const input = form.elements[`skill_${skill.name}`];
+    if (!input) {
+      return;
+    }
+    const base = getSkillBaseValue(skill);
     input.value = base;
     input.dispatchEvent(new Event("input", { bubbles: true }));
   });
 
-  statusEl.textContent = "Ficha limpa.";
-  updateDerivedStats();
+  for (let i = 1; i <= CUSTOM_SKILLS_COUNT; i += 1) {
+    const nameInput = form.elements[`custom_skill_${i}_name`];
+    const valueInput = form.elements[`custom_skill_${i}_value`];
+
+    if (nameInput) {
+      nameInput.value = "";
+    }
+
+    if (valueInput) {
+      valueInput.value = "";
+      const row = valueInput.closest(".skill-row");
+      if (!row) {
+        continue;
+      }
+      row.querySelectorAll(".value-display").forEach((el) => {
+        el.textContent = "-";
+      });
+    }
+  }
 }
 
 function flashStatus() {
