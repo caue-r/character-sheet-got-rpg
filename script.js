@@ -386,8 +386,8 @@ function buildExportFilename(characterName) {
   return `${safeName}.json`;
 }
 
-function downloadSheetJson(data) {
-  const payload = {
+function buildExportPayload(data) {
+  return {
     meta: {
       app: EXPORT_APP_ID,
       version: EXPORT_VERSION,
@@ -395,7 +395,10 @@ function downloadSheetJson(data) {
     },
     data
   };
+}
 
+function downloadSheetJson(data) {
+  const payload = buildExportPayload(data);
   const blob = new Blob([JSON.stringify(payload, null, 2)], {
     type: "application/json"
   });
@@ -411,6 +414,33 @@ function downloadSheetJson(data) {
   URL.revokeObjectURL(url);
 }
 
+async function saveSheetJsonWithPicker(data) {
+  if (typeof window.showSaveFilePicker !== "function") {
+    downloadSheetJson(data);
+    return "download";
+  }
+
+  const payload = buildExportPayload(data);
+  const content = JSON.stringify(payload, null, 2);
+  const fileName = buildExportFilename(data.nome);
+  const handle = await window.showSaveFilePicker({
+    suggestedName: fileName,
+    types: [
+      {
+        description: "Arquivo JSON",
+        accept: {
+          "application/json": [".json"]
+        }
+      }
+    ]
+  });
+
+  const writable = await handle.createWritable();
+  await writable.write(content);
+  await writable.close();
+  return "picker";
+}
+
 function applySheetData(data) {
   Object.entries(data).forEach(([key, value]) => {
     if (!form.elements[key]) {
@@ -423,11 +453,23 @@ function applySheetData(data) {
   updateDerivedStats();
 }
 
-function saveSheet() {
+async function saveSheet() {
   const data = collectFormData();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  downloadSheetJson(data);
-  statusEl.textContent = "Registro exportado em JSON e salvo localmente.";
+
+  try {
+    const method = await saveSheetJsonWithPicker(data);
+    statusEl.textContent =
+      method === "picker"
+        ? "Registro exportado em JSON no local escolhido."
+        : "Registro exportado em JSON e salvo localmente.";
+  } catch (error) {
+    if (error && error.name === "AbortError") {
+      statusEl.textContent = "Salvamento cancelado pelo usuário.";
+      return;
+    }
+    statusEl.textContent = "Erro ao exportar JSON.";
+  }
 }
 
 function parseImportedData(content) {
@@ -551,8 +593,8 @@ form.addEventListener("input", () => {
   flashStatus();
 });
 
-document.getElementById("saveBtn").addEventListener("click", () => {
-  saveSheet();
+document.getElementById("saveBtn").addEventListener("click", async () => {
+  await saveSheet();
   flashStatus();
 });
 
